@@ -21,8 +21,10 @@
                 
                 // Map the data into an array of objects
                 const data = jsonData.table.rows.map(row => ({
-                    parameter: row.c[0].v,
-                    url: row.c[1].v
+                    form: row.c[0] ? row.c[0].v : '',
+                    rider: row.c[1] ? row.c[1].v : '',
+                    team: row.c[2] ? row.c[2].v : '',
+                    url: row.c[3] ? row.c[3].v : ''
                 }));
                 
                 return data;
@@ -32,32 +34,60 @@
             }
         }
 
-        function redirectToForm(data, param) {
-            // Find the URL associated with the provided parameter
-            const redirect = data.find(item => item.parameter === param);
+        function redirectToForm(data, form, rider, team) {
+            // Find the URL based on form, rider, and team
+            let redirect;
+            
+            // Check for matches in order of specificity
+            if (rider) {
+                // Match on form and rider
+                redirect = data.find(item => item.form === form && item.rider === rider);
+            }
+            if (!redirect && team) {
+                // Match on form and team if rider didn't match
+                redirect = data.find(item => item.form === form && item.team === team);
+            }
+            if (!redirect) {
+                // Fallback to match on form only
+                redirect = data.find(item => item.form === form && !item.rider && !item.team);
+            }
+            
             if (redirect) {
                 // Redirect to the URL
                 window.location.href = redirect.url;
             } else {
-                // Display an error message if the parameter is not found
-                document.body.innerHTML = '<h1>404: Page not found</h1>';
+                // Display an error message if the combination is not found
+                document.body.innerHTML = '<h1>404: Form not found</h1>';
             }
         }
 
         (async function() {
-            // Get the URL parameter 'p'
+            // Get the URL parameters 'form', 'rider', and 'team'
             const urlParams = new URLSearchParams(window.location.search);
-            const param = urlParams.get('p');
+            const form = urlParams.get('form');
+            const rider = urlParams.get('rider');
+            const team = urlParams.get('team');
             
-            if (param) {
+            if (form) {
                 // Fetch the redirects data from the Google Sheet
                 const redirects = await getRedirects();
                 
-                // Perform the redirection based on the parameter
-                redirectToForm(redirects, param);
+                // Perform the redirection based on the form, rider, and team parameters
+                redirectToForm(redirects, form, rider, team);
             } else {
-                // Display an error message if no parameter is provided
-                document.body.innerHTML = '<h1>Missing parameter</h1>';
+                // Display an error message if the form parameter is missing
+                document.body.innerHTML = `
+                    <h1>Welcome to OTR-ZRL!</h1>
+                    <p>To access the correct form, please use the following URL format:</p>
+                    <p><strong>https://tinyurl.com/OTR-ZRL/?form=[form]&rider=[riderid]&team=[teamname]</strong></p>
+                    <p><strong>Examples:</strong></p>
+                    <ul>
+                        <li><strong>With Rider ID:</strong> <code>https://tinyurl.com/OTR-ZRL/?form=form1&rider=12345</code></li>
+                        <li><strong>With Team Name:</strong> <code>https://tinyurl.com/OTR-ZRL/?form=form2&team=TeamA</code></li>
+                        <li><strong>Without Rider ID or Team Name:</strong> <code>https://tinyurl.com/OTR-ZRL/?form=form3</code></li>
+                    </ul>
+                    <p>Please replace <code>[form]</code>, <code>[riderid]</code>, and <code>[teamname]</code> with the appropriate values.</p>
+                `;
             }
         })();
     </script>
