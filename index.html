@@ -10,6 +10,7 @@
         async function getRedirects() {
             // Replace 'your_spreadsheet_id' with your actual Google Sheet ID
             const sheetUrl = 'https://docs.google.com/spreadsheets/d/1AhA8SRi7DF3Y9gI8_2gS5C5794nQZLwYni-_etBH-2A/gviz/tq?tqx=out:json';
+            
             try {
                 // Fetch the data from the published Google Sheet
                 const response = await fetch(sheetUrl);
@@ -20,9 +21,9 @@
                 
                 // Map the data into an array of objects
                 const data = jsonData.table.rows.map(row => ({
-                    form: row.c[0] ? row.c[0].v : '',
-                    rider: row.c[1] ? row.c[1].v : '',
-                    team: row.c[2] ? row.c[2].v : '',
+                    form: row.c[0] ? row.c[0].v.toLowerCase() : '',
+                    rider: row.c[1] ? row.c[1].v.toLowerCase() : '',
+                    team: row.c[2] ? row.c[2].v.toLowerCase() : '',
                     url: row.c[3] ? row.c[3].v : ''
                 }));
                 
@@ -34,6 +35,11 @@
         }
 
         function redirectToForm(data, form, rider, team) {
+            // Convert parameters to lowercase for case-insensitive comparison
+            form = form.toLowerCase();
+            rider = rider ? rider.toLowerCase() : '';
+            team = team ? team.toLowerCase() : '';
+
             // Find the URL based on form, rider, and team
             let redirect;
             
