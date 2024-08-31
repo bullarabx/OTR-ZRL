@@ -36,7 +36,7 @@
 
         function redirectToForm(data, form, rider, team) {
             // Convert parameters to lowercase for case-insensitive comparison
-            form = form.toLowerCase();
+            form = form ? form.toLowerCase() : '';
             rider = rider ? rider.toLowerCase() : '';
             team = team ? team.toLowerCase() : '';
 
