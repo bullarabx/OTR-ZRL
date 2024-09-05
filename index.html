@@ -18,11 +18,13 @@
                 
                 // Remove the prefix and suffix added by Google Sheets API to get valid JSON
                 const jsonData = JSON.parse(text.substring(47).slice(0, -2));
+
+                console.log('Raw Data:', jsonData.table.rows);
                 
                 // Map the data into an array of objects
                 const data = jsonData.table.rows.map(row => ({
                     form: row.c[0] ? row.c[0].v.toLowerCase() : '',
-                    rider: row.c[1] && row.c[1].v !== null ? String(row.c[1].v).toLowerCase() : '',
+                    rider: (row.c[1] && row.c[1].v) ? String(row.c[1].v).toLowerCase() : '',
                     team: row.c[2] ? row.c[2].v.toLowerCase() : '',
                     url: row.c[3] ? row.c[3].v : ''
                 }));
