@@ -44,7 +44,11 @@
             let redirect;
             
             // Check for matches in order of specificity
-            if (rider) {
+            if (rider && team) {
+                //Match on form + rider + team
+                redirect = data.find(item => item.form === form && item.rider === rider && item.team === team);
+            }
+            if (!redirect && rider) {
                 // Match on form and rider
                 redirect = data.find(item => item.form === form && item.rider === rider);
             }
