@@ -22,10 +22,12 @@
                 // Map the data into an array of objects
                 const data = jsonData.table.rows.map(row => ({
                     form: row.c[0] ? row.c[0].v.toLowerCase() : '',
-                    rider: row.c[1] ? String(row.c[1].v).toLowerCase() : '',
+                    rider: row.c[1] && row.c[1].v ? String(row.c[1].v).toLowerCase() : '',
                     team: row.c[2] ? row.c[2].v.toLowerCase() : '',
                     url: row.c[3] ? row.c[3].v : ''
                 }));
+
+                console.log('Fetched Data:', data);
                 
                 return data;
             } catch (error) {
@@ -54,7 +56,7 @@
             }
             if (!redirect && team) {
                 // Match on form and team if rider didn't match
-                redirect = data.find(item => item.form === form && item.team === team);
+                redirect = data.find(item => item.form === form && !item.rider && item.team === team);
             }
             if (!redirect) {
                 // Fallback to match on form only
