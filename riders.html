@@ -200,7 +200,7 @@
                 const secondTeam = row.cells[6].textContent.toLowerCase();
 
                 // Check if the row matches any of the filter inputs
-                const matchesName = name.includes(nameInput) || category.includes(nameInput) || prefLeague.includes(nameInput) || altLeague.includes(nameInput);
+                const matchesName = riderId.includes(nameInput) || name.includes(nameInput) || category.includes(nameInput) || prefLeague.includes(nameInput) || altLeague.includes(nameInput);
                 const matchesTeam = firstTeam.includes(teamInput) || secondTeam.includes(teamInput);
 
                 if (matchesName && matchesTeam) {
