@@ -32,7 +32,7 @@
 
     <table id="teamsTable">
         <thead>
-            <tr><th>Team Name</th><th>Other Info</th></tr>
+            <tr><th>League</th><th>Category</th><th>Division</th><th>Team</th><th>Captain</th><th>Riders</th></tr>
         </thead>
         <tbody></tbody>
     </table>
@@ -107,7 +107,7 @@
                 if (data && data.length) {
                     data.forEach((row) => {
                         const rowElement = document.createElement("tr");
-                        rowElement.innerHTML = `<td>${row.teamName}</td><td>${row.otherInfo}</td>`;
+                        rowElement.innerHTML = `<td>${row.league}</td><td>${row.category}</td><td>${row.division}</td><td>${row.name}</td><td>${row.captain}</td><td>${row.riders}</td>`;
                         tableBody.appendChild(rowElement);
                     });
                 } else {
@@ -126,7 +126,7 @@
 
             // Count occurrences of each value in "Other Info"
             data.forEach(row => {
-                const category = row.otherInfo;
+                const category = row.category;
                 counts[category] = (counts[category] || 0) + 1;
             });
 
@@ -154,10 +154,11 @@
             const rows = document.querySelectorAll("#teamsTable tbody tr");
 
             rows.forEach(row => {
-                const teamName = row.cells[0].textContent.toLowerCase();
-                const otherInfo = row.cells[1].textContent.toLowerCase();
+                const league = row.cells[0].textContent.toLowerCase();
+                const category = row.cells[1].textContent.toLowerCase();
+                const teamName = row.cells[3].textContent.toLowerCase();
 
-                if (teamName.includes(input) || otherInfo.includes(input)) {
+                if (league.includes(input) || teamName.includes(input) || otherInfo.includes(input)) {
                     row.style.display = "";
                 } else {
                     row.style.display = "none";
