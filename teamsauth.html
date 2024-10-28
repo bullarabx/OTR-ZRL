@@ -158,7 +158,7 @@
                 const category = row.cells[1].textContent.toLowerCase();
                 const teamName = row.cells[3].textContent.toLowerCase();
 
-                if (league.includes(input) || teamName.includes(input) || otherInfo.includes(input)) {
+                if (league.includes(input) || teamName.includes(input) || category.includes(input)) {
                     row.style.display = "";
                 } else {
                     row.style.display = "none";
