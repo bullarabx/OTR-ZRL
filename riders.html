@@ -30,6 +30,9 @@
     <label for="filter-input">Filter Riders:</label>
     <input type="text" id="filter-input" placeholder="Type to filter riders" onkeyup="filterRiders()">
 
+    <label for="team-filter-input">Filter Teams:</label>
+    <input type="text" id="team-filter-input" placeholder="Type to filter teams" onkeyup="filterRiders()">
+
     <!-- Table for Rider Data -->
     <table id="ridersTable">
         <thead>
@@ -183,18 +186,27 @@
 
         // Filter Function for the Rider Table
         function filterRiders() {
-            const input = document.getElementById("filter-input").value.toLowerCase();
+            const nameInput = document.getElementById("filter-input").value.toLowerCase();
+            const teamInput = document.getElementById("team-filter-input").value.toLowerCase();
             const rows = document.querySelectorAll("#ridersTable tbody tr");
 
             rows.forEach(row => {
+                const riderId = row.cells[0].textContent.toLowerCase();
                 const name = row.cells[1].textContent.toLowerCase();
-                const league = row.cells[2].textContent.toLowerCase();
-                const team = row.cells[4].textContent.toLowerCase();
+                const category = row.cells[2].textContent.toLowerCase();
+                const prefLeague = row.cells[3].textContent.toLowerCase();
+                const altfLeague = row.cells[4].textContent.toLowerCase();
+                const firstTeam = row.cells[5].textContent.toLowerCase();
+                const secondTeam = row.cells[6].textContent.toLowerCase();
 
-                if (name.includes(input) || league.includes(input) || team.includes(input)) {
-                    row.style.display = "";
+                // Check if the row matches any of the filter inputs
+                const matchesName = riderId.includes(nameInput) || name.includes(nameInput) || category.includes(nameInput) || prefLeague.includes(nameInput) || altLeague.includes(nameInput);
+                const matchesTeam = firstTeam.includes(teamInput) || secondTeam.includes(teamInput);
+
+                if (matchesName && matchesTeam) {
+                    row.style.display = ""; // Show row if it matches both filters
                 } else {
-                    row.style.display = "none";
+                    row.style.display = "none"; // Hide row if it doesn't match
                 }
             });
         }
