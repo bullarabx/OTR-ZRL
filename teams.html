@@ -37,7 +37,6 @@
         <tbody></tbody>
     </table>
 
-    <h2>Team Distribution by Category</h2>
     <div id="piechart" style="width: 900px; height: 500px;"></div>
 
     <script>
@@ -124,7 +123,7 @@
         function drawChart(data) {
             const counts = {};
 
-            // Count occurrences of each value in "Other Info"
+            // Count occurrences of each value in "Category"
             data.forEach(row => {
                 const category = row.category;
                 counts[category] = (counts[category] || 0) + 1;
@@ -141,7 +140,7 @@
             }
 
             const options = {
-                title: "Team Distribution by Other Info",
+                title: "Team Distribution by Category",
                 pieHole: 0.4, // Set to 0 for a full pie chart, or >0 for a donut chart
             };
 
