@@ -13,6 +13,19 @@
 <body>
     <h2>Riders List</h2>
 
+    <!-- Login Area -->
+    <div id="login-area">
+        <input type="email" id="email" placeholder="Enter your email" required />
+        <input type="text" id="riderId" placeholder="Enter your rider ID" required />
+        <button onclick="login()">Sign In</button>
+    </div>
+
+    <!-- User Info and Logout -->
+    <div id="user-info" style="display:none;">
+        <span>Signed in as: <span id="user-name"></span></span>
+        <button onclick="logout()">Sign Out</button>
+    </div>
+
     <!-- Filter Input -->
     <label for="filter-input">Filter Riders:</label>
     <input type="text" id="filter-input" placeholder="Type to filter riders" onkeyup="filterRiders()">
@@ -47,7 +60,53 @@
 
         // Load the Google Charts library and set callback for pie chart drawing
         google.charts.load("current", { packages: ["corechart"] });
-        google.charts.setOnLoadCallback(fetchRiders);
+        google.charts.setOnLoadCallback(checkLogin);
+
+        function login() {
+            const email = document.getElementById("email").value;
+            const riderId = document.getElementById("riderId").value;
+
+            if (!email || !riderId) {
+                alert("Please enter both email and rider ID.");
+                return;
+            }
+
+            fetch(baseWebAppUrl, {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: `email=${encodeURIComponent(email)}&riderId=${encodeURIComponent(riderId)}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.isValid) {
+                    sessionStorage.setItem("riderEmail", email);
+                    displayUser(email);
+                    fetchTeams();
+                } else {
+                    alert("Invalid email or rider ID. Please try again.");
+                }
+            })
+            .catch(error => console.error("Error during login:", error));
+        }
+
+        function logout() {
+            sessionStorage.removeItem("riderEmail");
+            location.reload();
+        }
+
+        function displayUser(email) {
+            document.getElementById("login-area").style.display = "none";
+            document.getElementById("user-info").style.display = "block";
+            document.getElementById("user-name").innerText = email;
+        }
+
+        function checkLogin() {
+            const email = sessionStorage.getItem("riderEmail");
+            if (email) {
+                displayUser(email);
+                fetchTeams();
+            }
+        }
 
         // Fetch Rider Data from Google Apps Script
         async function fetchRiders() {
@@ -137,6 +196,8 @@
                 }
             });
         }
+
+        document.addEventListener("DOMContentLoaded", checkLogin);
     </script>
 </body>
 </html>
