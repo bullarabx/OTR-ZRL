@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Riders List</title>
+    <style>
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+    </style>
+    <!-- Load Google Charts Library -->
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+</head>
+<body>
+    <h2>Riders List</h2>
+
+    <!-- Filter Input -->
+    <label for="filter-input">Filter Riders:</label>
+    <input type="text" id="filter-input" placeholder="Type to filter riders" onkeyup="filterRiders()">
+
+    <!-- Table for Rider Data -->
+    <table id="ridersTable">
+        <thead>
+            <tr>
+                <th>Rider ID</th>
+                <th>Name</th>
+                <th>Preferred League</th>
+                <th>Alternate League</th>
+                <th>First Team</th>
+                <th>Second Team</th>
+                <th>Race 1</th>
+                <th>Race 2</th>
+                <th>Race 3</th>
+                <th>Race 4</th>
+                <th>Race 5</th>
+                <th>Race 6</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <!-- Pie Chart for Rider Distribution -->
+    <h2>Rider Distribution by Preferred League</h2>
+    <div id="piechart" style="width: 900px; height: 500px;"></div>
+
+    <script>
+        const baseWebAppUrl = "https://script.google.com/macros/s/AKfycbyNjv-anoLx3EqUu5FIxrdLiy2yUGuU4wvc5_gMN7wDTCy0F0YuJ87WZY3uDH2-Lebk/exec"; // Replace with your Apps Script URL
+
+        // Load the Google Charts library and set callback for pie chart drawing
+        google.charts.load("current", { packages: ["corechart"] });
+        google.charts.setOnLoadCallback(fetchRiders);
+
+        // Fetch Rider Data from Google Apps Script
+        async function fetchRiders() {
+            const url = `${baseWebAppUrl}?type=riders`;
+            try {
+                console.log("Fetching riders...");
+                const response = await fetch(url);
+                if (!response.ok) throw new Error(`Network response was not ok: ${response.statusText}`);
+                const data = await response.json();
+
+                populateRiderTable(data);
+                drawChart(data);
+            } catch (error) {
+                console.error("Error fetching rider data:", error);
+                alert("Failed to load riders. Please try again later.");
+            }
+        }
+
+        // Populate HTML Table with Rider Data
+        function populateRiderTable(data) {
+            const tableBody = document.querySelector("#ridersTable tbody");
+            tableBody.innerHTML = "";
+
+            data.forEach((row) => {
+                const rowElement = document.createElement("tr");
+                rowElement.innerHTML = `
+                    <td>${row.riderId}</td>
+                    <td>${row.name}</td>
+                    <td>${row.prefLeague}</td>
+                    <td>${row.altLeague}</td>
+                    <td>${row.firstTeam}</td>
+                    <td>${row.secondTeam}</td>
+                    <td>${row.race1}</td>
+                    <td>${row.race2}</td>
+                    <td>${row.race3}</td>
+                    <td>${row.race4}</td>
+                    <td>${row.race5}</td>
+                    <td>${row.race6}</td>
+                `;
+                tableBody.appendChild(rowElement);
+            });
+        }
+
+        // Draw Pie Chart with Distribution of Riders by Preferred League
+        function drawChart(data) {
+            const counts = {};
+
+            // Count occurrences of each value in "Preferred League"
+            data.forEach(row => {
+                const league = row.prefLeague;
+                counts[league] = (counts[league] || 0) + 1;
+            });
+
+            // Prepare data for Google Charts
+            const chartData = new google.visualization.DataTable();
+            chartData.addColumn("string", "Preferred League");
+            chartData.addColumn("number", "Count");
+
+            // Add rows from counts object
+            for (const [league, count] of Object.entries(counts)) {
+                chartData.addRow([league, count]);
+            }
+
+            const options = {
+                title: "Rider Distribution by Preferred League",
+                pieHole: 0.4, // Set to 0 for a full pie chart, or >0 for a donut chart
+            };
+
+            const chart = new google.visualization.PieChart(document.getElementById("piechart"));
+            chart.draw(chartData, options);
+        }
+
+        // Filter Function for the Rider Table
+        function filterRiders() {
+            const input = document.getElementById("filter-input").value.toLowerCase();
+            const rows = document.querySelectorAll("#ridersTable tbody tr");
+
+            rows.forEach(row => {
+                const name = row.cells[1].textContent.toLowerCase();
+                const league = row.cells[2].textContent.toLowerCase();
+                const team = row.cells[4].textContent.toLowerCase();
+
+                if (name.includes(input) || league.includes(input) || team.includes(input)) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
+            });
+        }
+    </script>
+</body>
+</html>
