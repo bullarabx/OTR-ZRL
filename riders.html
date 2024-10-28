@@ -81,7 +81,7 @@
                 if (data.isValid) {
                     sessionStorage.setItem("riderEmail", email);
                     displayUser(email);
-                    fetchRiders();
+                    fetchRiders(); // Corrected to fetchRiders
                 } else {
                     alert("Invalid email or rider ID. Please try again.");
                 }
@@ -104,7 +104,7 @@
             const email = sessionStorage.getItem("riderEmail");
             if (email) {
                 displayUser(email);
-                fetchRiders();
+                fetchRiders(); // Corrected to fetchRiders
             }
         }
 
