@@ -191,6 +191,7 @@
             const rows = document.querySelectorAll("#ridersTable tbody tr");
 
             rows.forEach(row => {
+                const riderId = row.cells[0].textContent;
                 const name = row.cells[1].textContent.toLowerCase();
                 const category = row.cells[2].textContent.toLowerCase();
                 const prefLeague = row.cells[3].textContent.toLowerCase();
