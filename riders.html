@@ -1,6 +1,8 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OTR ZRL 2024/25</title>
     <style>
         body {
@@ -8,79 +10,82 @@
             font-family: Arial, sans-serif;
         }
 
-        table { 
-            font-size: 0.8em;
-            width: 100%; 
-            border-collapse: collapse; 
+        /* Sign-in link in top-right */
+        #login-area {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+
+        /* Table styling */
+        table {
+            font-size: 0.9em;
+            width: 100%;
+            border-collapse: collapse;
             margin-top: 20px;
             box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        th, td { 
-            border: 1px solid #ddd; 
-            padding: 12px; 
-            text-align: left;
-        }
-
-        th { 
-            background-color: #f4f6f9; 
-            font-weight: bold;
-            color: #333;
-            position: sticky; 
-            top: 0; 
-            z-index: 1;
-        }
-
-        /* Alternating row colors */
-        tbody tr:nth-child(even) { 
-            background-color: #f9f9f9; 
-        }
-
-        /* Row hover effect */
-        tbody tr:hover { 
-            background-color: #e9f4fb; 
-            cursor: pointer;
-        }
-
-        /* Table border */
-        table { 
-            border-radius: 8px; 
+            border-radius: 8px;
             overflow: hidden;
             border: 1px solid #ddd;
         }
 
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f4f6f9;
+            font-weight: bold;
+            color: #333;
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+
+        /* Alternating row colors */
+        tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        /* Row hover effect */
+        tbody tr:hover {
+            background-color: #e9f4fb;
+            cursor: pointer;
+        }
+
         /* Styling for input fields */
-        input[type="text"], input[type="email"] { 
-            padding: 8px; 
-            margin: 8px 0; 
-            width: 250px; 
-            border: 1px solid #ccc; 
-            border-radius: 4px; 
+        input[type="text"], input[type="email"] {
+            padding: 8px;
+            margin: 8px 0;
+            width: 250px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
             font-size: 14px;
         }
 
         /* Style for buttons */
-        button { 
-            background-color: #007bff; 
-            color: white; 
-            padding: 10px 20px; 
-            border: none; 
-            border-radius: 4px; 
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
             cursor: pointer;
             font-size: 14px;
         }
 
-        button:hover { 
-            background-color: #0056b3; 
+        button:hover {
+            background-color: #0056b3;
         }
     </style>
-    <!-- Load Google Charts Library -->
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 </head>
 <body>
     <h2>Round 2 Riders</h2>
 
-    <!-- Login Area -->
+    <!-- Login Area in top-right corner -->
     <div id="login-area">
         <input type="email" id="email" placeholder="Enter your email" required />
         <input type="text" id="riderId" placeholder="Enter your rider ID" required />
@@ -96,7 +101,6 @@
     <!-- Filter Input -->
     <label for="filter-input">Filter Riders:</label>
     <input type="text" id="filter-input" placeholder="Type to filter riders" onkeyup="filterRiders()">
-
     <label for="team-filter-input">Filter Teams:</label>
     <input type="text" id="team-filter-input" placeholder="Type to filter teams" onkeyup="filterRiders()">
 
@@ -127,9 +131,8 @@
     <div id="piechart" style="width: 900px; height: 500px;"></div>
 
     <script>
-        const baseWebAppUrl = "https://script.google.com/macros/s/AKfycbzNnne8ELkhsXdKO0KW48v6ApYK5Yuml7XcTvOHavJmgolHiLWUtcrSkCM3e_yqa5Jg/exec"; // Replace with your Apps Script URL
+        const baseWebAppUrl = "https://script.google.com/macros/s/AKfycbzNnne8ELkhsXdKO0KW48v6ApYK5Yuml7XcTvOHavJmgolHiLWUtcrSkCM3e_yqa5Jg/exec";
 
-        // Load the Google Charts library and set callback for pie chart drawing
         google.charts.load("current", { packages: ["corechart"] });
         google.charts.setOnLoadCallback(checkLogin);
 
@@ -152,7 +155,7 @@
                 if (data.isValid) {
                     sessionStorage.setItem("riderEmail", email);
                     displayUser(email);
-                    fetchRiders(); // Corrected to fetchRiders
+                    fetchRiders();
                 } else {
                     alert("Invalid email or rider ID. Please try again.");
                 }
@@ -175,15 +178,13 @@
             const email = sessionStorage.getItem("riderEmail");
             if (email) {
                 displayUser(email);
-                fetchRiders(); // Corrected to fetchRiders
+                fetchRiders();
             }
         }
 
-        // Fetch Rider Data from Google Apps Script
         async function fetchRiders() {
             const url = `${baseWebAppUrl}?type=riders`;
             try {
-                console.log("Fetching riders...");
                 const response = await fetch(url);
                 if (!response.ok) throw new Error(`Network response was not ok: ${response.statusText}`);
                 const data = await response.json();
@@ -196,7 +197,6 @@
             }
         }
 
-        // Populate HTML Table with Rider Data
         function populateRiderTable(data) {
             const tableBody = document.querySelector("#ridersTable tbody");
             tableBody.innerHTML = "";
@@ -222,36 +222,30 @@
             });
         }
 
-        // Draw Pie Chart with Distribution of Riders by Preferred League
         function drawChart(data) {
             const counts = {};
-
-            // Count occurrences of each value in "Preferred League"
             data.forEach(row => {
                 const league = row.prefLeague;
                 counts[league] = (counts[league] || 0) + 1;
             });
 
-            // Prepare data for Google Charts
             const chartData = new google.visualization.DataTable();
             chartData.addColumn("string", "Preferred League");
             chartData.addColumn("number", "Count");
 
-            // Add rows from counts object
             for (const [league, count] of Object.entries(counts)) {
                 chartData.addRow([league, count]);
             }
 
             const options = {
                 title: "Rider Distribution by Preferred League",
-                pieHole: 0.4, // Set to 0 for a full pie chart, or >0 for a donut chart
+                pieHole: 0.4,
             };
 
             const chart = new google.visualization.PieChart(document.getElementById("piechart"));
             chart.draw(chartData, options);
         }
 
-        // Filter Function for the Rider Table
         function filterRiders() {
             const nameInput = document.getElementById("filter-input").value.toLowerCase();
             const teamInput = document.getElementById("team-filter-input").value.toLowerCase();
@@ -266,15 +260,10 @@
                 const firstTeam = row.cells[5].textContent.toLowerCase();
                 const secondTeam = row.cells[6].textContent.toLowerCase();
 
-                // Check if the row matches any of the filter inputs
                 const matchesName = riderId.includes(nameInput) || name.includes(nameInput) || category.includes(nameInput) || prefLeague.includes(nameInput) || altLeague.includes(nameInput);
                 const matchesTeam = firstTeam.includes(teamInput) || secondTeam.includes(teamInput);
 
-                if (matchesName && matchesTeam) {
-                    row.style.display = ""; // Show row if it matches both filters
-                } else {
-                    row.style.display = "none"; // Hide row if it doesn't match
-                }
+                row.style.display = matchesName && matchesTeam ? "" : "none";
             });
         }
 
