@@ -148,11 +148,9 @@
     <!-- Pie Charts for Rider Distribution -->
     <div class="chart-container">
         <div class="chart">
-            <h2>Rider Distribution by Category</h2>
             <div id="categoryChart"></div>
         </div>
         <div class="chart">
-            <h2>Rider Distribution by Preferred League</h2>
             <div id="leagueChart"></div>
         </div>
     </div>
@@ -217,7 +215,8 @@
                 const data = await response.json();
 
                 populateRiderTable(data);
-                drawChart(data);
+                drawCategoryChart(data); 
+                drawLeagueChart(data); 
             } catch (error) {
                 console.error("Error fetching rider data:", error);
                 alert("Failed to load riders. Please try again later.");
@@ -265,8 +264,8 @@
             }
 
             const options = {
-                title: "Rider Distribution by Category",
-                titleTextStyle: { fontSize: 18 },
+                title: "Riders by Category",
+                titleTextStyle: { fontSize: 12, alignment: "center"},
                 pieHole: 0.4,
             };
 
@@ -290,8 +289,8 @@
             }
 
             const options = {
-                title: "Rider Distribution by Preferred League",
-                titleTextStyle: { fontSize: 18 },
+                title: "Riders by Preferred League",
+                titleTextStyle: { fontSize: 12, alignment: "center"},
                 pieHole: 0.4,
             };
 
